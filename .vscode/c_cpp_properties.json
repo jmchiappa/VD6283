@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:\\Users\\jm.chiappa.DEMS\\Downloads\\en.x-cube-als\\vd6283tx-library/Wire/**",
+                "C:/Users/jm.chiappa.DEMS/AppData/Local/Arduino15/packages/STMicroelectronics/hardware/stm32/2.7.1/libraries/**",
+                "C:/Users/jm.chiappa.DEMS/AppData/Local/Arduino15/packages/STMicroelectronics/hardware/stm32/2.7.1/cores/**",
+                "C:\\Users\\jm.chiappa.DEMS\\AppData\\Local\\Arduino15\\packages\\STMicroelectronics\\tools/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.22621.0",
+            "compilerPath": "cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}

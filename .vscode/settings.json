@@ -1,0 +1,19 @@
+{
+  "C_Cpp.intelliSenseEngineFallback": "enabled",
+  "files.associations": {
+    "*.jarvis": "xml",
+    "*.ino": "cpp",
+    "stals_platform.h": "c",
+    "io.h": "c",
+    "wire.h": "c",
+    "stals.h": "c",
+    "vd6283tx.h": "c",
+    "functional": "cpp",
+    "system_error": "cpp",
+    "xtr1common": "cpp",
+    "array": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp"
+  }
+}
