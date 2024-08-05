@@ -4,10 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\Users\\jm.chiappa.DEMS\\Downloads\\en.x-cube-als\\vd6283tx-library/Wire/**",
-                "C:/Users/jm.chiappa.DEMS/AppData/Local/Arduino15/packages/STMicroelectronics/hardware/stm32/2.7.1/libraries/**",
-                "C:/Users/jm.chiappa.DEMS/AppData/Local/Arduino15/packages/STMicroelectronics/hardware/stm32/2.7.1/cores/**",
-                "C:\\Users\\jm.chiappa.DEMS\\AppData\\Local\\Arduino15\\packages\\STMicroelectronics\\tools/**"
+                "/home/vs30/.arduino15/packages/STMicroelectronics/hardware/stm32/2.7.1/libraries/**",
+                "/home/vs30/.arduino15/packages/STMicroelectronics/hardware/stm32/2.7.1/cores/**",
+                "/home/vs30/.arduino15/packages/STMicroelectronics/tools/**"
             ],
             "defines": [
                 "_DEBUG",

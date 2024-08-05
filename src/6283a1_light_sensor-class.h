@@ -22,9 +22,8 @@
 #define VD6283A1_XNUCLEO_LIGHT_SENSOR_H
 
 /* Includes ------------------------------------------------------------------*/
-// #include "6283a1_conf-class.h"
-#include "../vd6283tx/light_sensor.h"
-#include "../vd6283tx/vd6283tx.h"
+#include "vd6283tx/light_sensor.h"
+#include "vd6283tx/vd6283tx.h"
 #include "Arduino.h"
 #include "Wire.h"
 

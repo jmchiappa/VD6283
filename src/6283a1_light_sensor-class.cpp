@@ -22,10 +22,9 @@
 
 * Includes ------------------------------------------------------------------
 * */
-
+#include "vd6283tx/modules/busIO/IO.h"
 #include "6283a1_light_sensor-class.h"
 #include "stm32l4xx_nucleo_errno.h"
-
 /**
   * @}
   */
@@ -66,7 +65,7 @@ int32_t VD6283TX::Begin()
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
-      else if (VD6283A1_LIGHT_SENSOR_Drv->GetCapabilities(&VD6283TXObj, &VD6283A1_LIGHT_SENSOR_Cap)
+      else if (GetCapabilities(&VD6283TXObj, &VD6283A1_LIGHT_SENSOR_Cap)
                != VD6283TX_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
