@@ -20,26 +20,14 @@
 #ifndef VD6283TX_H
 #define VD6283TX_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 /* Includes ------------------------------------------------------------------*/
 #include "modules/STALS.h"
 #include <stddef.h>
-#include "modules/busIO/IO.h"
 
-/** @addtogroup BSP
-  * @{
-  */
-
-/** @addtogroup Components
-  * @{
-  */
-
-/** @addtogroup VD6283TX
-  * @{
-  */
-
-/** @defgroup VD6283TX_Exported_Constants Exported Constants
-  * @{
-  */
 #define VD6283TX_DEVICE_ID_REG        (0x00U)
 #define VD6283TX_DEVICE_ID            (0x70U)
 
@@ -74,22 +62,6 @@
 /** @defgroup VD6283TX_Exported_Types Exported Types
   * @{
   */
-// typedef int32_t (*VD6283TX_Init_Func)(void);
-// typedef int32_t (*VD6283TX_DeInit_Func)(void);
-// typedef int32_t (*VD6283TX_GetTick_Func)(void);
-// typedef int32_t (*VD6283TX_Delay_Func)(uint32_t);
-// typedef int32_t (*VD6283TX_WriteReg_Func)(uint16_t, uint16_t, uint8_t *, uint16_t);
-// typedef int32_t (*VD6283TX_ReadReg_Func)(uint16_t, uint16_t, uint8_t *, uint16_t);
-
-// typedef struct
-// {
-//   VD6283TX_Init_Func Init;
-//   VD6283TX_DeInit_Func DeInit;
-//   uint16_t Address;
-//   VD6283TX_WriteReg_Func WriteReg;
-//   VD6283TX_ReadReg_Func ReadReg;
-//   VD6283TX_GetTick_Func GetTick;
-// } VD6283TX_IO_t;
 
 typedef struct VD6283TX_Capabilities_s
 {
@@ -100,7 +72,8 @@ typedef struct VD6283TX_Capabilities_s
 
 typedef struct VD6283TX_Object_s
 {
-  BusIO IO;
+
+  void *IO;
   void *handle;  /*!< bare-driver handle */
   uint32_t FlickerOutputType;
   uint8_t IsInitialized;
@@ -109,33 +82,26 @@ typedef struct VD6283TX_Object_s
   uint8_t IsFlickerActive;
 } VD6283TX_Object_t;
 
-typedef struct VD6283TX_LIGHT_SENSOR_Drv_s
-{
-  int32_t (*Init)(VD6283TX_Object_t *);
-  int32_t (*DeInit)(VD6283TX_Object_t *);
-  int32_t (*ReadID)(VD6283TX_Object_t *, uint32_t *);
-  int32_t (*GetCapabilities)(VD6283TX_Object_t *, VD6283TX_Capabilities_t *);
-  int32_t (*SetExposureTime)(VD6283TX_Object_t *, uint32_t);
-  int32_t (*GetExposureTime)(VD6283TX_Object_t *, uint32_t *);
-  int32_t (*SetGain)(VD6283TX_Object_t *, uint8_t, uint32_t);
-  int32_t (*GetGain)(VD6283TX_Object_t *, uint8_t, uint32_t *);
-  int32_t (*SetInterMeasurementTime)(VD6283TX_Object_t *, uint32_t);
-  int32_t (*GetInterMeasurementTime)(VD6283TX_Object_t *, uint32_t *);
-  int32_t (*Start)(VD6283TX_Object_t *, uint8_t);
-  int32_t (*Stop)(VD6283TX_Object_t *);
-  int32_t (*StartFlicker)(VD6283TX_Object_t *, uint8_t, uint8_t);
-  int32_t (*StopFlicker)(VD6283TX_Object_t *);
-  int32_t (*GetValues)(VD6283TX_Object_t *, uint32_t *);
-  int32_t (*SetControlMode)(VD6283TX_Object_t *, uint32_t, uint32_t);
-} VD6283TX_LIGHT_SENSOR_Drv_t;
-/**
-  * @}
-  */
+// typedef struct VD6283TX_LIGHT_SENSOR_Drv_s
+// {
+//   int32_t (*Init)(VD6283TX_Object_t *);
+//   int32_t (*DeInit)(VD6283TX_Object_t *);
+//   int32_t (*ReadID)(VD6283TX_Object_t *, uint32_t *);
+//   int32_t (*GetCapabilities)(VD6283TX_Object_t *, VD6283TX_Capabilities_t *);
+//   int32_t (*SetExposureTime)(VD6283TX_Object_t *, uint32_t);
+//   int32_t (*GetExposureTime)(VD6283TX_Object_t *, uint32_t *);
+//   int32_t (*SetGain)(VD6283TX_Object_t *, uint8_t, uint32_t);
+//   int32_t (*GetGain)(VD6283TX_Object_t *, uint8_t, uint32_t *);
+//   int32_t (*SetInterMeasurementTime)(VD6283TX_Object_t *, uint32_t);
+//   int32_t (*GetInterMeasurementTime)(VD6283TX_Object_t *, uint32_t *);
+//   int32_t (*Start)(VD6283TX_Object_t *, uint8_t);
+//   int32_t (*Stop)(VD6283TX_Object_t *);
+//   int32_t (*StartFlicker)(VD6283TX_Object_t *, uint8_t, uint8_t);
+//   int32_t (*StopFlicker)(VD6283TX_Object_t *);
+//   int32_t (*GetValues)(VD6283TX_Object_t *, uint32_t *);
+//   int32_t (*SetControlMode)(VD6283TX_Object_t *, uint32_t, uint32_t);
+// } VD6283TX_LIGHT_SENSOR_Drv_t;
 
-/** @defgroup VD6283TX_Exported_Functions Exported Functions
-  * @{
-  */
-// int32_t VD6283TX_RegisterBusIO(VD6283TX_Object_t *pObj, VD6283TX_IO_t *pIO);
 int32_t VD6283TX_Init(VD6283TX_Object_t *pObj);
 int32_t VD6283TX_DeInit(VD6283TX_Object_t *pObj);
 int32_t VD6283TX_ReadID(VD6283TX_Object_t *pObj, uint32_t *pId);
@@ -155,10 +121,8 @@ int32_t VD6283TX_SetControlMode(VD6283TX_Object_t *pObj, uint32_t ControlMode, u
 
 int32_t VD6283TX_GetSaturation(VD6283TX_Object_t *pObj, uint32_t *pValue);
 
-/* LIGHT_SENSOR driver structure */
-extern VD6283TX_LIGHT_SENSOR_Drv_t   VD6283TX_LIGHT_SENSOR_Driver;
-/**
-  * @}
-  */
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* VD6283TX_H */

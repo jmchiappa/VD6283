@@ -17,35 +17,16 @@
   ******************************************************************************
   */
 
-/* File Info: ------------------------------------------------------------------
-*                                   User NOTES
-
-* Includes ------------------------------------------------------------------
-* */
 #include "vd6283tx/modules/busIO/IO.h"
 #include "6283a1_light_sensor-class.h"
 #include "stm32l4xx_nucleo_errno.h"
-/**
-  * @}
-  */
 
-// static int32_t VD6283TX_Probe(uint32_t Instance);
-// static int32_t vd6283tx_i2c_recover(void);
-
-/**
-  * @brief Initializes the light sensor.
-  * @param Instance    Light sensor instance.
-  * @retval BSP status
-  */
-VD6283TX::VD6283TX(TwoWire &port) {
-  this->port_ = port;
-}
-
-int32_t VD6283TX::Begin()
+int32_t VD6283TX::Begin(TwoWire &port)
 {
   int32_t ret;
   uint32_t id;
-  VD6283TXObj.IO.begin(LIGHT_SENSOR_VD6283TX_ADDRESS,port_);
+  VD6283TXObj.IO = (void *) &i2cBus;
+  i2cBus.begin(LIGHT_SENSOR_VD6283TX_ADDRESS,port);
   if (VD6283TX_ReadID(&VD6283TXObj, &id) != VD6283TX_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
@@ -61,11 +42,11 @@ int32_t VD6283TX::Begin()
       //VD6283A1_LIGHT_SENSOR_Drv = (LIGHT_SENSOR_Drv_t *) &VD6283TX_LIGHT_SENSOR_Driver;
       //VD6283A1_LIGHT_SENSOR_CompObj[Instance] = &(VD6283TXObj[Instance]);
 
-      if (VD6283A1_LIGHT_SENSOR_Drv->Init(&VD6283TXObj) != VD6283TX_OK)
+      if (VD6283TX_Init(&VD6283TXObj) != VD6283TX_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
-      else if (GetCapabilities(&VD6283TXObj, &VD6283A1_LIGHT_SENSOR_Cap)
+      else if (VD6283TX_GetCapabilities(&VD6283TXObj, &VD6283A1_LIGHT_SENSOR_Cap)
                != VD6283TX_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
@@ -83,7 +64,7 @@ int32_t VD6283TX::DeInit()
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->DeInit(&VD6283TXObj) < 0)
+  if (VD6283TX_DeInit(&VD6283TXObj) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -105,7 +86,7 @@ int32_t VD6283TX::ReadID(uint32_t *pId)
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->ReadID(&VD6283TXObj, pId) < 0)
+  if (VD6283TX_ReadID(&VD6283TXObj, pId) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -123,11 +104,11 @@ int32_t VD6283TX::ReadID(uint32_t *pId)
   * @param pCapabilities    Pointer to the light sensor capabilities.
   * @retval BSP status
   */
-int32_t VD6283TX::GetCapabilities(LIGHT_SENSOR_Capabilities_t *pCapabilities)
+int32_t VD6283TX::GetCapabilities(VD6283TX_Capabilities_t *pCapabilities)
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->GetCapabilities(&VD6283TXObj, pCapabilities) < 0)
+  if (VD6283TX_GetCapabilities(&VD6283TXObj, pCapabilities) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -150,7 +131,7 @@ int32_t VD6283TX::SetExposureTime(uint32_t ExposureTime)
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->SetExposureTime(&VD6283TXObj, ExposureTime) < 0)
+  if (VD6283TX_SetExposureTime(&VD6283TXObj, ExposureTime) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -172,7 +153,7 @@ int32_t VD6283TX::GetExposureTime(uint32_t *pExposureTime)
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->GetExposureTime(&VD6283TXObj, pExposureTime) < 0)
+  if (VD6283TX_GetExposureTime(&VD6283TXObj, pExposureTime) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -196,7 +177,7 @@ int32_t VD6283TX::SetGain(uint8_t Channel, uint32_t Gain)
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->SetGain(&VD6283TXObj, Channel, Gain) < 0)
+  if (VD6283TX_SetGain(&VD6283TXObj, Channel, Gain) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -218,7 +199,7 @@ int32_t VD6283TX::SetGain(uint8_t Channel, uint32_t Gain)
 int32_t VD6283TX::GetGain(uint8_t Channel, uint32_t *pGain)
 {
   int32_t ret;
-  if (VD6283A1_LIGHT_SENSOR_Drv->GetGain(&VD6283TXObj, Channel, pGain) < 0)
+  if (VD6283TX_GetGain(&VD6283TXObj, Channel, pGain) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -242,7 +223,7 @@ int32_t VD6283TX::SetInterMeasurementTime(uint32_t InterMeasurementTime)
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->SetInterMeasurementTime(&VD6283TXObj, InterMeasurementTime) < 0)
+  if (VD6283TX_SetInterMeasurementTime(&VD6283TXObj, InterMeasurementTime) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -264,7 +245,7 @@ int32_t VD6283TX::GetInterMeasurementTime(uint32_t *pInterMeasurementTime)
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->GetInterMeasurementTime(&VD6283TXObj, pInterMeasurementTime) < 0)
+  if (VD6283TX_GetInterMeasurementTime(&VD6283TXObj, pInterMeasurementTime) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -286,7 +267,7 @@ int32_t VD6283TX::Start(uint8_t Mode)
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->Start(&VD6283TXObj, Mode) < 0)
+  if (VD6283TX_Start(&VD6283TXObj, Mode) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -307,7 +288,7 @@ int32_t VD6283TX::Stop()
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->Stop(&VD6283TXObj) < 0)
+  if (VD6283TX_Stop(&VD6283TXObj) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -333,7 +314,7 @@ int32_t VD6283TX::StartFlicker(uint8_t Channel, uint8_t OutputMode)
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->StartFlicker(&VD6283TXObj, Channel, OutputMode) < 0)
+  if (VD6283TX_StartFlicker(&VD6283TXObj, Channel, OutputMode) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -354,7 +335,7 @@ int32_t VD6283TX::StopFlicker()
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->StopFlicker(&VD6283TXObj) < 0)
+  if (VD6283TX_StopFlicker(&VD6283TXObj) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -377,7 +358,7 @@ int32_t VD6283TX::GetValues(uint32_t *pResult)
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->GetValues(&VD6283TXObj, pResult) < 0)
+  if (VD6283TX_GetValues(&VD6283TXObj, pResult) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -401,7 +382,7 @@ int32_t VD6283TX::SetControlMode(uint32_t ControlMode, uint32_t Value)
 {
   int32_t ret;
 
-  if (VD6283A1_LIGHT_SENSOR_Drv->SetControlMode(&VD6283TXObj, ControlMode, Value) < 0)
+  if (VD6283TX_SetControlMode(&VD6283TXObj, ControlMode, Value) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }

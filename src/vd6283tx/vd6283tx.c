@@ -18,57 +18,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "vd6283tx.h"
+#include "modules/STALS_platform.h"
+#include <Arduino.h>
 
-/** @addtogroup BSP
-  * @{
-  */
-
-/** @addtogroup Components
-  * @{
-  */
-
-/** @addtogroup VD6283TX
-  * @brief     This file provides a set of functions needed to drive the
-  *            VD6283TX light sensor.
-  * @{
-  */
-
-/** @defgroup VD6283TX_Private_Types_Definitions Private Types Definitions
-  * @{
-  */
-/**
-  * @}
-  */
-/** @defgroup VD6283TX_Private_Variables
-  * @{
-  */
-// VD6283TX_LIGHT_SENSOR_Drv_t VD6283TX_LIGHT_SENSOR_Driver =
-// {
-//   VD6283TX_Init,
-//   VD6283TX_DeInit,
-//   VD6283TX_ReadID,
-//   VD6283TX_GetCapabilities,
-//   VD6283TX_SetExposureTime,
-//   VD6283TX_GetExposureTime,
-//   VD6283TX_SetGain,
-//   VD6283TX_GetGain,
-//   VD6283TX_SetInterMeasurementTime,
-//   VD6283TX_GetInterMeasurementTime,
-//   VD6283TX_Start,
-//   VD6283TX_Stop,
-//   VD6283TX_StartFlicker,
-//   VD6283TX_StopFlicker,
-//   VD6283TX_GetValues,
-//   VD6283TX_SetControlMode
-// };
-
-/**
-  * @}
-  */
-
-/** @defgroup VD6283TX_Private_Functions_Prototypes Private Functions Prototypes
-  * @{
-  */
 static int32_t vd6283tx_check_filter_valid(void *hdl, uint8_t channels);
 static uint8_t vd6283tx_filter_invalid_channels(void *hdl, uint8_t channels);
 /**
@@ -116,6 +68,7 @@ static uint8_t vd6283tx_filter_invalid_channels(void *hdl, uint8_t channels);
   * @param pObj    vd6283tx context object.
   * @retval VD6283TX status
   */
+
 int32_t VD6283TX_Init(VD6283TX_Object_t *pObj)
 {
   int32_t ret;
@@ -183,7 +136,8 @@ int32_t VD6283TX_ReadID(VD6283TX_Object_t *pObj, uint32_t *pId)
   {
     /* initialize the variable before reading the ID register */
     *pId = 0;
-    ret = pObj->IO.ReadReg(pObj->IO.Address, VD6283TX_DEVICE_ID_REG, (uint8_t *) pId, 1);
+    ret = STALS_RdByte(pObj,VD6283TX_DEVICE_ID_REG,pId);
+    // ret = pObj->(BusIO *)IO-> ->ReadReg(pObj->IO.Address, VD6283TX_DEVICE_ID_REG, (uint8_t *) pId, 1);
   }
   else
   {

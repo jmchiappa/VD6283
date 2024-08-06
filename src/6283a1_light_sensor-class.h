@@ -22,18 +22,10 @@
 #define VD6283A1_XNUCLEO_LIGHT_SENSOR_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "vd6283tx/light_sensor.h"
 #include "vd6283tx/vd6283tx.h"
 #include "Arduino.h"
 #include "Wire.h"
-
-typedef struct
-{
-  uint8_t NumberOfChannels;  /*!< Max: LIGHT_SENSOR_MAX_CHANNELS */
-  uint8_t FlickerDetection;  /*!< Not available: 0, Available: 1 */
-  uint8_t Autogain;          /*!< Not available: 0, Available: 1 */
-  uint8_t Flicker;           /*!< Not available: 0, Available: 1 */
-} LIGHT_SENSOR_Capabilities_t;
+#include "vd6283tx/modules/busIO/IO.h"
 
 /** @defgroup XNUCLEO_6283A1_LIGHT_SENSOR_Exported_Constants Exported Constants
   * @{
@@ -59,10 +51,10 @@ typedef struct
   */
 class VD6283TX {
   public:
-    VD6283TX(TwoWire &port);
-    int32_t Begin();
+    VD6283TX() {};
+    int32_t Begin(TwoWire &port);
     int32_t ReadID(uint32_t *pId);
-    int32_t GetCapabilities(LIGHT_SENSOR_Capabilities_t *pCapabilities);
+    int32_t GetCapabilities(VD6283TX_Capabilities_t *pCapabilities);
     int32_t SetExposureTime(uint32_t ExposureTime);
     int32_t GetExposureTime(uint32_t *pExposureTime);
     int32_t SetGain(uint8_t Channel, uint32_t Gain);
@@ -76,17 +68,11 @@ class VD6283TX {
     int32_t GetValues(uint32_t *pResult);
     int32_t SetControlMode(uint32_t ControlMode, uint32_t Value);
     int32_t GetSaturation(uint32_t *pValue);
-    int32_t VD6283A1_I2C_Init();
-    int32_t VD6283A1_I2C_DeInit();
-    int32_t VD6283A1_I2C_WriteReg(uint16_t DevAddr, uint16_t Reg, uint8_t *pData, uint16_t Length);
-    int32_t VD6283A1_I2C_ReadReg(uint16_t DevAddr, uint16_t Reg, uint8_t *pData, uint16_t Length);
-    int32_t VD6283A1_GetTick() { return millis(); }
-  private:
     int32_t DeInit();
-    LIGHT_SENSOR_Drv_t *VD6283A1_LIGHT_SENSOR_Drv = (LIGHT_SENSOR_Drv_t *) &VD6283TX_LIGHT_SENSOR_Driver;
-    LIGHT_SENSOR_Capabilities_t VD6283A1_LIGHT_SENSOR_Cap;
+  private:
+    VD6283TX_Capabilities_t VD6283A1_LIGHT_SENSOR_Cap;
     VD6283TX_Object_t VD6283TXObj;
-    TwoWire &port_ = Wire;
+    BusIO i2cBus;
 };
 
 #endif /* VD6283A1_XNUCLEO_LIGHT_SENSOR_H */

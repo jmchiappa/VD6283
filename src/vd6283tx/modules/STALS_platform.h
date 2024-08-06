@@ -18,16 +18,18 @@
 #ifndef __STALS_PLATFORM__
 #define __STALS_PLATFORM__ 1
 
-#include "STALS.h"
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
+#include "STALS.h"
+
 /* following functions must be implemented by platform integrator */
 STALS_ErrCode_t STALS_WrByte(void *pClient, uint8_t index, uint8_t data);
 STALS_ErrCode_t STALS_RdByte(void *pClient, uint8_t index, uint8_t *data);
 /* following function is optional. There is a default weak implementation */
+// STALS_ErrCode_t STALS_RdMultipleBytes(void *pClient, uint8_t index, uint8_t *data, int nb)  __attribute__((weak));
 STALS_ErrCode_t STALS_RdMultipleBytes(void *pClient, uint8_t index, uint8_t *data, int nb);
 
 #ifdef __cplusplus

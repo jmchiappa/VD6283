@@ -36,11 +36,6 @@ bool BusIO::isConnected()
     return (true);
 }
 
-void BusIO::setAddress(uint8_t newAddress)
-{
-    _address = newAddress;
-}
-
 // Must be able to write 32,768 bytes at a time
 uint8_t BusIO::writeMultipleBytes(uint16_t registerAddress, uint8_t *buffer, uint16_t bufferSize)
 {
