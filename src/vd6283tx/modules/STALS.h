@@ -498,6 +498,16 @@ STALS_ErrCode_t STALS_GetControl(void * pHandle, enum STALS_Control_Id_t Control
 */
 STALS_ErrCode_t STALS_GetUid(void * pHandle, char ** pUid);
 
+/**
+ * This function return 0 if no data is present otherwise !0
+ *
+ * @param pHandle                          Opaque pointer used as the id of the instance of the driver
+ *
+ * \retval  STALS_NO_ERROR                 Success
+ * \retval  STALS_ERROR_INVALID_PARAMS     At least one of the provided parameters to the function is invalid
+*/
+STALS_ErrCode_t STALS_isDataReady(void *pHandle, uint8_t *pIsReady);
+
 #endif
 
 #ifdef __cplusplus

@@ -27,7 +27,7 @@ STALS_ErrCode_t STALS_WrByte(void *pClient, uint8_t index, uint8_t data)
 	VD6283TX_Object_t *pObj = (VD6283TX_Object_t *) pClient;
 	BusIO *port = (BusIO *)pObj->IO;
 	// port.
-	res = port->writeSingleByte( (uint16_t)index, data );
+	res = port->writeSingleByte( index, data );
 
 	if (res)
 			return STALS_ERROR_WRITE;
@@ -40,7 +40,7 @@ STALS_ErrCode_t STALS_RdByte(void *pClient, uint8_t index, uint8_t *data)
 	int32_t res;
 	VD6283TX_Object_t *pObj = (VD6283TX_Object_t *) pClient;
 	BusIO *port = (BusIO *)pObj->IO;
-	*data = port->readSingleByte( (uint16_t)index);
+	*data = port->readSingleByte( index );
 	return STALS_NO_ERROR;
 }
 
@@ -49,7 +49,7 @@ STALS_ErrCode_t STALS_RdMultipleBytes(void *pClient, uint8_t index, uint8_t *dat
 	int32_t res;
 	VD6283TX_Object_t *pObj = (VD6283TX_Object_t *) pClient;
 	BusIO *port = (BusIO *)pObj->IO;
-	res = port->readMultipleBytes((int16_t)index,data,nb);
+	res = port->readMultipleBytes(index,data,nb);
 	if (res)
 			return STALS_ERROR_READ;
 

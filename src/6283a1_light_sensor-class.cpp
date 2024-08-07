@@ -21,12 +21,12 @@
 #include "6283a1_light_sensor-class.h"
 #include "stm32l4xx_nucleo_errno.h"
 
-int32_t VD6283TX::begin(TwoWire &port)
+int32_t VD6283::VD6283TX::begin(TwoWire &port)
 {
   int32_t ret;
   uint32_t id;
   VD6283TXObj.IO = (void *) &i2cBus;
-  i2cBus.begin(LIGHT_SENSOR_VD6283TX_ADDRESS,port);
+  i2cBus.begin(VD6283::CONSTANT::I2C_DEFAULT_ADDRESS>>1,port);
   if (VD6283TX_ReadID(&VD6283TXObj, &id) != VD6283TX_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
@@ -39,17 +39,13 @@ int32_t VD6283TX::begin(TwoWire &port)
     }
     else
     {
-      //VD6283A1_LIGHT_SENSOR_Drv = (LIGHT_SENSOR_Drv_t *) &VD6283TX_LIGHT_SENSOR_Driver;
-      //VD6283A1_LIGHT_SENSOR_CompObj[Instance] = &(VD6283TXObj[Instance]);
-
       if (VD6283TX_Init(&VD6283TXObj) != VD6283TX_OK)
       {
-        ret = BSP_ERROR_COMPONENT_FAILURE;
+        ret = BSP_ERROR_INIT_FAILURE;
       }
-      else if (VD6283TX_GetCapabilities(&VD6283TXObj, &VD6283A1_LIGHT_SENSOR_Cap)
-               != VD6283TX_OK)
+      else if (VD6283TX_GetCapabilities(&VD6283TXObj, &VD6283A1_LIGHT_SENSOR_Cap) != VD6283TX_OK)
       {
-        ret = BSP_ERROR_COMPONENT_FAILURE;
+        ret = BSP_ERROR_GET_CAPABILITIES__FAILURE;
       }
       else
       {
@@ -60,7 +56,7 @@ int32_t VD6283TX::begin(TwoWire &port)
   return ret;
 }
 
-int32_t VD6283TX::DeInit()
+int32_t VD6283::VD6283TX::DeInit()
 {
   int32_t ret;
 
@@ -82,11 +78,27 @@ int32_t VD6283TX::DeInit()
   * @param pId    Pointer to the device ID.
   * @retval BSP status
   */
-int32_t VD6283TX::ReadID(uint32_t *pId)
+int32_t VD6283::VD6283TX::ReadID(uint32_t *pId)
 {
   int32_t ret;
 
   if (VD6283TX_ReadID(&VD6283TXObj, pId) < 0)
+  {
+    ret = BSP_ERROR_COMPONENT_FAILURE;
+  }
+  else
+  {
+    ret = BSP_ERROR_NONE;
+  }
+
+  return ret;
+}
+
+int32_t VD6283::VD6283TX::isDataReady(uint8_t *pIsReady)
+{
+  int32_t ret;
+
+  if (VD6283TX_isDataReady(&VD6283TXObj, pIsReady) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -104,7 +116,7 @@ int32_t VD6283TX::ReadID(uint32_t *pId)
   * @param pCapabilities    Pointer to the light sensor capabilities.
   * @retval BSP status
   */
-int32_t VD6283TX::GetCapabilities(VD6283TX_Capabilities_t *pCapabilities)
+int32_t VD6283::VD6283TX::GetCapabilities(VD6283TX_Capabilities_t *pCapabilities)
 {
   int32_t ret;
 
@@ -127,7 +139,7 @@ int32_t VD6283TX::GetCapabilities(VD6283TX_Capabilities_t *pCapabilities)
   * @warning This function must not be called when a capture is ongoing.
   * @retval BSP status
   */
-int32_t VD6283TX::SetExposureTime(uint32_t ExposureTime)
+int32_t VD6283::VD6283TX::SetExposureTime(uint32_t ExposureTime)
 {
   int32_t ret;
 
@@ -149,7 +161,7 @@ int32_t VD6283TX::SetExposureTime(uint32_t ExposureTime)
   * @param pExposureTime    Pointer to the current exposure time value.
   * @retval BSP status
   */
-int32_t VD6283TX::GetExposureTime(uint32_t *pExposureTime)
+int32_t VD6283::VD6283TX::GetExposureTime(uint32_t *pExposureTime)
 {
   int32_t ret;
 
@@ -173,7 +185,7 @@ int32_t VD6283TX::GetExposureTime(uint32_t *pExposureTime)
   * @warning This function must not be called when a capture is ongoing.
   * @retval BSP status
   */
-int32_t VD6283TX::SetGain(uint8_t Channel, uint32_t Gain)
+int32_t VD6283::VD6283TX::SetGain(uint8_t Channel, uint32_t Gain)
 {
   int32_t ret;
 
@@ -196,7 +208,7 @@ int32_t VD6283TX::SetGain(uint8_t Channel, uint32_t Gain)
   * @param pGain    Pointer to the current gain value.
   * @retval BSP status
   */
-int32_t VD6283TX::GetGain(uint8_t Channel, uint32_t *pGain)
+int32_t VD6283::VD6283TX::GetGain(uint8_t Channel, uint32_t *pGain)
 {
   int32_t ret;
   if (VD6283TX_GetGain(&VD6283TXObj, Channel, pGain) < 0)
@@ -219,7 +231,7 @@ int32_t VD6283TX::GetGain(uint8_t Channel, uint32_t *pGain)
   * @warning This function must not be called when a capture is ongoing.
   * @retval BSP status
   */
-int32_t VD6283TX::SetInterMeasurementTime(uint32_t InterMeasurementTime)
+int32_t VD6283::VD6283TX::SetInterMeasurementTime(uint32_t InterMeasurementTime)
 {
   int32_t ret;
 
@@ -241,7 +253,7 @@ int32_t VD6283TX::SetInterMeasurementTime(uint32_t InterMeasurementTime)
   * @param pInterMeasurementTime    Pointer to the current inter-measurement time.
   * @retval BSP status
   */
-int32_t VD6283TX::GetInterMeasurementTime(uint32_t *pInterMeasurementTime)
+int32_t VD6283::VD6283TX::GetInterMeasurementTime(uint32_t *pInterMeasurementTime)
 {
   int32_t ret;
 
@@ -263,7 +275,7 @@ int32_t VD6283TX::GetInterMeasurementTime(uint32_t *pInterMeasurementTime)
   * @param Mode    Measurement mode (continuous or single-shot)
   * @retval BSP status
   */
-int32_t VD6283TX::Start(uint8_t Mode)
+int32_t VD6283::VD6283TX::Start(uint8_t Mode)
 {
   int32_t ret;
 
@@ -284,7 +296,7 @@ int32_t VD6283TX::Start(uint8_t Mode)
   * @param Instance    Light sensor instance.
   * @retval BSP status
   */
-int32_t VD6283TX::Stop()
+int32_t VD6283::VD6283TX::Stop()
 {
   int32_t ret;
 
@@ -310,7 +322,7 @@ int32_t VD6283TX::Stop()
   * @note Calling this function will enable ALS capture on all the other channels.
   * @retval BSP status
   */
-int32_t VD6283TX::StartFlicker(uint8_t Channel, uint8_t OutputMode)
+int32_t VD6283::VD6283TX::StartFlicker(uint8_t Channel, uint8_t OutputMode)
 {
   int32_t ret;
 
@@ -331,7 +343,7 @@ int32_t VD6283TX::StartFlicker(uint8_t Channel, uint8_t OutputMode)
   * @param Instance     Light sensor instance.
   * @retval BSP status
   */
-int32_t VD6283TX::StopFlicker()
+int32_t VD6283::VD6283TX::StopFlicker()
 {
   int32_t ret;
 
@@ -354,7 +366,7 @@ int32_t VD6283TX::StopFlicker()
   * @note The array size must match the number of channels of the device.
   * @retval BSP status
   */
-int32_t VD6283TX::GetValues(uint32_t *pResult)
+int32_t VD6283::VD6283TX::GetValues(uint32_t *pResult)
 {
   int32_t ret;
 
@@ -378,7 +390,7 @@ int32_t VD6283TX::GetValues(uint32_t *pResult)
   * @warning This function must not be called when a capture is ongoing.
   * @retval BSP status
   */
-int32_t VD6283TX::SetControlMode(uint32_t ControlMode, uint32_t Value)
+int32_t VD6283::VD6283TX::SetControlMode(uint32_t ControlMode, uint32_t Value)
 {
   int32_t ret;
 
@@ -401,7 +413,7 @@ int32_t VD6283TX::SetControlMode(uint32_t ControlMode, uint32_t Value)
   * @warning The saturation value is reset when the device is stopped.
   * @retval BSP status
   */
-int32_t VD6283TX::GetSaturation(uint32_t *pValue)
+int32_t VD6283::VD6283TX::GetSaturation(uint32_t *pValue)
 {
   int32_t ret;
 

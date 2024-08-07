@@ -4,9 +4,10 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/home/vs30/.arduino15/packages/STMicroelectronics/hardware/stm32/2.7.1/libraries/**",
-                "/home/vs30/.arduino15/packages/STMicroelectronics/hardware/stm32/2.7.1/cores/**",
-                "/home/vs30/.arduino15/packages/STMicroelectronics/tools/**"
+                "C:/Users/jm.chiappa.DEMS/OneDrive - DEMS/Documents/Arduino/libraries/vd6283tx-library/**",
+                "C:/Users/jm.chiappa.DEMS/AppData/Local/Arduino15/packages/STMicroelectronics/hardware/stm32/2.7.1/libraries/**",
+                "C:/Users/jm.chiappa.DEMS/AppData/Local/Arduino15/packages/STMicroelectronics/hardware/stm32/2.7.1/cores/**",
+                "C:\\Users\\jm.chiappa.DEMS\\AppData\\Local\\Arduino15\\packages\\STMicroelectronics\\tools/**"
             ],
             "defines": [
                 "_DEBUG",

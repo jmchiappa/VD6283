@@ -37,7 +37,7 @@ bool BusIO::isConnected()
 }
 
 // Must be able to write 32,768 bytes at a time
-uint8_t BusIO::writeMultipleBytes(uint16_t registerAddress, uint8_t *buffer, uint16_t bufferSize)
+uint8_t BusIO::writeMultipleBytes(uint8_t registerAddress, uint8_t *buffer, uint16_t bufferSize)
 {
     // Chunk I2C transactions into limit of 32 bytes (or wireMaxPacketSize)
     uint8_t i2cError = 0;
@@ -50,8 +50,7 @@ uint8_t BusIO::writeMultipleBytes(uint16_t registerAddress, uint8_t *buffer, uin
             len = (wireMaxPacketSize - 2);
 
         _i2cPort->beginTransmission((uint8_t)_address);
-        _i2cPort->write(highByte(registerAddress));
-        _i2cPort->write(lowByte(registerAddress));
+        _i2cPort->write(registerAddress);
 
         // TODO write a subsection of the buffer rather than byte wise
         for (uint16_t x = 0; x < len; x++)
@@ -68,14 +67,13 @@ uint8_t BusIO::writeMultipleBytes(uint16_t registerAddress, uint8_t *buffer, uin
     return (i2cError);
 }
 
-uint8_t BusIO::readMultipleBytes(uint16_t registerAddress, uint8_t *buffer, uint16_t bufferSize)
+uint8_t BusIO::readMultipleBytes(uint8_t registerAddress, uint8_t *buffer, uint16_t bufferSize)
 {
     uint8_t i2cError = 0;
 
     // Write address to read from
     _i2cPort->beginTransmission(_address);
-    _i2cPort->write(highByte(registerAddress));
-    _i2cPort->write(lowByte(registerAddress));
+    _i2cPort->write(registerAddress);
     i2cError = _i2cPort->endTransmission(false); // Do not release bus
     if (i2cError != 0)
         return (i2cError);
@@ -106,21 +104,19 @@ uint8_t BusIO::readMultipleBytes(uint16_t registerAddress, uint8_t *buffer, uint
     return (0); // Success
 }
 
-uint8_t BusIO::readSingleByte(uint16_t registerAddress)
+uint8_t BusIO::readSingleByte(uint8_t registerAddress)
 {
     _i2cPort->beginTransmission(_address);
-    _i2cPort->write(highByte(registerAddress));
-    _i2cPort->write(lowByte(registerAddress));
+    _i2cPort->write(registerAddress);
     _i2cPort->endTransmission();
     _i2cPort->requestFrom(_address, 1U);
     return _i2cPort->read();
 }
 
-uint8_t BusIO::writeSingleByte(uint16_t registerAddress, uint8_t const value)
+uint8_t BusIO::writeSingleByte(uint8_t registerAddress, uint8_t const value)
 {
     _i2cPort->beginTransmission(_address);
-    _i2cPort->write(highByte(registerAddress));
-    _i2cPort->write(lowByte(registerAddress));
+    _i2cPort->write(registerAddress);
     _i2cPort->write(value);
     return _i2cPort->endTransmission();
 }

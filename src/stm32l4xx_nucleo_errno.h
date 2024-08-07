@@ -28,6 +28,9 @@
 #define BSP_ERROR_MSP_FAILURE            -10
 #define BSP_ERROR_FEATURE_NOT_SUPPORTED      -11
 
+#define BSP_ERROR_INIT_FAILURE      -20
+#define BSP_ERROR_GET_CAPABILITIES__FAILURE      -21
+
 /* BSP BUS error codes */
 
 #define BSP_ERROR_BUS_TRANSACTION_FAILURE    -100

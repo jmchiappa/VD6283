@@ -30,7 +30,7 @@
 
 #define VD6283TX_DEVICE_ID_REG        (0x00U)
 #define VD6283TX_DEVICE_ID            (0x70U)
-
+#define VD6283TX_IRQ_CTRL_ST					(0x02U)
 #define VD6283TX_MAX_CHANNELS         ((uint8_t)STALS_ALS_MAX_CHANNELS)     /*!< Number of channels of the device */
 #define VD6283TX_ALL_CHANNELS         ((1U << STALS_ALS_MAX_CHANNELS) - 1U) /*!< Bitmask to select all ALS channels */
 
@@ -82,29 +82,10 @@ typedef struct VD6283TX_Object_s
   uint8_t IsFlickerActive;
 } VD6283TX_Object_t;
 
-// typedef struct VD6283TX_LIGHT_SENSOR_Drv_s
-// {
-//   int32_t (*Init)(VD6283TX_Object_t *);
-//   int32_t (*DeInit)(VD6283TX_Object_t *);
-//   int32_t (*ReadID)(VD6283TX_Object_t *, uint32_t *);
-//   int32_t (*GetCapabilities)(VD6283TX_Object_t *, VD6283TX_Capabilities_t *);
-//   int32_t (*SetExposureTime)(VD6283TX_Object_t *, uint32_t);
-//   int32_t (*GetExposureTime)(VD6283TX_Object_t *, uint32_t *);
-//   int32_t (*SetGain)(VD6283TX_Object_t *, uint8_t, uint32_t);
-//   int32_t (*GetGain)(VD6283TX_Object_t *, uint8_t, uint32_t *);
-//   int32_t (*SetInterMeasurementTime)(VD6283TX_Object_t *, uint32_t);
-//   int32_t (*GetInterMeasurementTime)(VD6283TX_Object_t *, uint32_t *);
-//   int32_t (*Start)(VD6283TX_Object_t *, uint8_t);
-//   int32_t (*Stop)(VD6283TX_Object_t *);
-//   int32_t (*StartFlicker)(VD6283TX_Object_t *, uint8_t, uint8_t);
-//   int32_t (*StopFlicker)(VD6283TX_Object_t *);
-//   int32_t (*GetValues)(VD6283TX_Object_t *, uint32_t *);
-//   int32_t (*SetControlMode)(VD6283TX_Object_t *, uint32_t, uint32_t);
-// } VD6283TX_LIGHT_SENSOR_Drv_t;
-
 int32_t VD6283TX_Init(VD6283TX_Object_t *pObj);
 int32_t VD6283TX_DeInit(VD6283TX_Object_t *pObj);
 int32_t VD6283TX_ReadID(VD6283TX_Object_t *pObj, uint32_t *pId);
+int32_t VD6283TX_isDataReady(VD6283TX_Object_t *pObj, uint8_t *pIsReady);
 int32_t VD6283TX_GetCapabilities(VD6283TX_Object_t *pObj, VD6283TX_Capabilities_t *pCapabilities);
 int32_t VD6283TX_SetExposureTime(VD6283TX_Object_t *pObj, uint32_t ExposureTime);
 int32_t VD6283TX_GetExposureTime(VD6283TX_Object_t *pObj, uint32_t *pExposureTime);

@@ -111,6 +111,22 @@ int32_t VD6283TX_ReadID(VD6283TX_Object_t *pObj, uint32_t *pId)
   return ret;
 }
 
+int32_t VD6283TX_isDataReady(VD6283TX_Object_t *pObj, uint8_t *pIsReady) {
+  int32_t ret;
+  if ((pObj != NULL) && (pIsReady != NULL))
+  {
+    *pIsReady = 0;
+    ret = STALS_RdByte(pObj, VD6283TX_IRQ_CTRL_ST, &pIsReady);
+    *pIsReady = !(*pIsReady & 0x02);
+  }
+  else
+  {
+    ret = VD6283TX_INVALID_PARAM;
+  }
+
+  return ret;
+}
+
 /**
   * @brief Get the vd6283tx capabilities.
   * @param pObj    vd6283tx context object.

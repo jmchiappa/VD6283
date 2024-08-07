@@ -1784,19 +1784,9 @@ STALS_ErrCode_t STALS_GetUid(void *pHandle, char **pUid)
 	return STALS_NO_ERROR;
 }
 
-// STALS_ErrCode_t STALS_RdMultipleBytes(void *pClient, uint8_t index, uint8_t *data, int nb) __attribute__((weak));
-
-// STALS_ErrCode_t STALS_RdMultipleBytes(void *pClient, uint8_t index,
-// 	uint8_t *data, int nb)
-// {
-// 	STALS_ErrCode_t res = STALS_NO_ERROR;
-// 	uint8_t i = 0;
-
-// 	for (i = 0; i < (uint8_t) nb; i++) {
-// 		res = STALS_RdByte(pClient, (uint8_t) (index + i), &data[i]);
-// 		if (res)
-// 			return res;
-// 	}
-
-// 	return res;
-// }
+STALS_ErrCode_t STALS_isDataReady(void *pHandle, uint8_t *pIsReady) {
+	STALS_ErrCode_t res = STALS_NO_ERROR;
+	struct VD6283_device *dev = get_active_device(pHandle);
+	res = is_data_ready(dev, pIsReady);
+	return res;
+}
