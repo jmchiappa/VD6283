@@ -28,42 +28,6 @@ static uint8_t vd6283tx_filter_invalid_channels(void *hdl, uint8_t channels);
   */
 
 /**
-  * @brief Initializes the vd6283tx context object.
-  * @param pObj    vd6283tx context object.
-  * @param pIO     BSP IO struct.
-  * @retval VL53L3CX status
-  */
-// int32_t VD6283TX_RegisterBusIO(VD6283TX_Object_t *pObj, VD6283TX_IO_t *pIO)
-// {
-//   int32_t ret;
-
-//   if (pObj == NULL)
-//   {
-//     ret = VD6283TX_INVALID_PARAM;
-//   }
-//   else
-//   {
-//     pObj->IO.Init      = pIO->Init;
-//     pObj->IO.DeInit    = pIO->DeInit;
-//     pObj->IO.Address   = pIO->Address;
-//     pObj->IO.WriteReg  = pIO->WriteReg;
-//     pObj->IO.ReadReg   = pIO->ReadReg;
-//     pObj->IO.GetTick   = pIO->GetTick;
-
-//     if (pObj->IO.Init != NULL)
-//     {
-//       ret = pObj->IO.Init();
-//     }
-//     else
-//     {
-//       ret = VD6283TX_ERROR;
-//     }
-//   }
-
-//   return ret;
-// }
-
-/**
   * @brief Initializes the vd6283tx light sensor.
   * @param pObj    vd6283tx context object.
   * @retval VD6283TX status

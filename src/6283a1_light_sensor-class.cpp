@@ -21,7 +21,7 @@
 #include "6283a1_light_sensor-class.h"
 #include "stm32l4xx_nucleo_errno.h"
 
-int32_t VD6283TX::Begin(TwoWire &port)
+int32_t VD6283TX::begin(TwoWire &port)
 {
   int32_t ret;
   uint32_t id;

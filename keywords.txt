@@ -3,22 +3,24 @@
 # Syntax Coloring Map
 #######################################
 
-STSServoDriver	KEYWORD1
+VD6283TX	KEYWORD1
 
-init	                KEYWORD2
-ping	                KEYWORD2
-setId	                KEYWORD2
-getCurrentPosition    KEYWORD2
-getCurrentSpeed       KEYWORD2
-getCurrentTemperature	KEYWORD2
-getCurrentCurrent     KEYWORD2
-isMoving              KEYWORD2
-setTargetVelocity	    KEYWORD2
-trigerAction	        KEYWORD2
-writeRegister	        KEYWORD2
-writeTwoBytesRegister	KEYWORD2
-readRegister          KEYWORD2
-readTwoBytesRegister  KEYWORD2
+begin	                KEYWORD2
+ReadID	                KEYWORD2
+GetCapabilities	                KEYWORD2
+SetExposureTime    KEYWORD2
+GetExposureTime       KEYWORD2
+SetGain	KEYWORD2
+GetGain     KEYWORD2
+SetInterMeasurementTime              KEYWORD2
+GetInterMeasurementTime	    KEYWORD2
+Start	        KEYWORD2
+Stop	        KEYWORD2
+StartFlicker	KEYWORD2
+StopFlicker          KEYWORD2
+GetValues  KEYWORD2
+SetControlMode  KEYWORD2
+GetSaturation  KEYWORD2
 
 FIRMWARE_MAJOR          LITERAL1
 FIRMWARE_MINOR          LITERAL1

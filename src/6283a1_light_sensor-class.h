@@ -52,7 +52,7 @@
 class VD6283TX {
   public:
     VD6283TX() {};
-    int32_t Begin(TwoWire &port);
+    int32_t begin(TwoWire &port);
     int32_t ReadID(uint32_t *pId);
     int32_t GetCapabilities(VD6283TX_Capabilities_t *pCapabilities);
     int32_t SetExposureTime(uint32_t ExposureTime);
