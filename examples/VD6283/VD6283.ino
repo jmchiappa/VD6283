@@ -5,7 +5,14 @@ VD6283::VD6283TX myColorSensor;
 #define print2ln(a,b)   {Serial.print(a);Serial.print('\t');Serial.println(b);}
 #define GAIN(a)         (uint16_t)((float)a*256)
 #define GAIN_NOMINAL 50
-const uint8_t gain[] = {GAIN_NOMINAL,GAIN_NOMINAL,GAIN_NOMINAL,GAIN_NOMINAL*3/5,GAIN_NOMINAL,GAIN_NOMINAL};
+const uint8_t gain[] = {
+  GAIN_NOMINAL, // rouge
+  GAIN_NOMINAL, // visible
+  GAIN_NOMINAL, // bleu
+  GAIN_NOMINAL*3/5, // vert
+  GAIN_NOMINAL, // IR
+  GAIN_NOMINAL // tout
+};
 
 void setup() {
   Serial.begin(115200);
@@ -41,8 +48,8 @@ void loop() {
     for(uint8_t i=0; i < 6 ; i++ ) {
       Serial.print(label[i]);
       Serial.print(":");
-      Serial.print(measure[i]);
-      // Serial.print((float)(( (float)measure[i] / VALUE_MAX )*100));
+      // Serial.print(measure[i]);
+      Serial.print((float)(( (float)measure[i] / measure[VD6283::CHANNEL::VISIBLE] )*100));
       // Serial.print("");
       if(i!=5)
         Serial.print(",");
