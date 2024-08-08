@@ -47,6 +47,7 @@ namespace VD6283 {
     byte const GREEN              = VD6283TX_GREEN_CHANNEL;
     byte const IR                 = VD6283TX_IR_CHANNEL;
     byte const CLEAR              = VD6283TX_CLEAR_CHANNEL;
+    byte const LENGTH             = VD6283TX_CLEAR_CHANNEL+1;
   }
   class VD6283TX {
     public:
@@ -58,6 +59,7 @@ namespace VD6283 {
       int32_t SetExposureTime(uint32_t ExposureTime);
       int32_t GetExposureTime(uint32_t *pExposureTime);
       int32_t SetGain(uint8_t Channel, uint32_t Gain);
+      int32_t SetGain(uint32_t Gain);
       int32_t GetGain(uint8_t Channel, uint32_t *pGain);
       int32_t SetInterMeasurementTime(uint32_t InterMeasurementTime);
       int32_t GetInterMeasurementTime(uint32_t *pInterMeasurementTime);

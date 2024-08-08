@@ -177,6 +177,19 @@ int32_t VD6283::VD6283TX::GetExposureTime(uint32_t *pExposureTime)
   return ret;
 }
 
+int32_t VD6283::VD6283TX::SetGain(uint32_t Gain)
+{
+  int32_t ret = BSP_ERROR_NONE;
+  for(uint8_t channel=0 ; channel< VD6283::CHANNEL::LENGTH ;channel++) {
+    if (VD6283TX_SetGain(&VD6283TXObj, channel, Gain) < 0)
+    {
+      ret = BSP_ERROR_COMPONENT_FAILURE;
+      break;
+    }
+  }
+  return ret;
+}
+
 /**
   * @brief Set the gain of a channel.
   * @param Instance    Light sensor instance.
