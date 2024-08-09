@@ -36,7 +36,6 @@ bool BusIO::isConnected()
     return (true);
 }
 
-// Must be able to write 32,768 bytes at a time
 uint8_t BusIO::writeMultipleBytes(uint8_t registerAddress, uint8_t *buffer, uint16_t bufferSize)
 {
     // Chunk I2C transactions into limit of 32 bytes (or wireMaxPacketSize)
