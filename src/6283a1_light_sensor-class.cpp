@@ -93,8 +93,8 @@ uint32_t VD6283::VD6283TX::ReadID()
   */
 uint32_t VD6283::VD6283TX::isDataReady()
 {
-  uint8_t *pIsReady;
-  if (VD6283TX_isDataReady(&VD6283TXObj, pIsReady) < 0)
+  uint8_t pIsReady;
+  if (VD6283TX_isDataReady(&VD6283TXObj, &pIsReady) < 0)
   {
     return BSP_ERROR_COMPONENT_FAILURE;
   }

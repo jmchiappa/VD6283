@@ -116,7 +116,7 @@ int32_t VD6283TX_isDataReady(VD6283TX_Object_t *pObj, uint8_t *pIsReady) {
   if ((pObj != NULL) && (pIsReady != NULL))
   {
     *pIsReady = 0;
-    ret = STALS_RdByte(pObj, VD6283TX_IRQ_CTRL_ST, &pIsReady);
+    ret = STALS_RdByte(pObj, VD6283TX_IRQ_CTRL_ST, pIsReady);
     *pIsReady = !(*pIsReady & 0x02);
   }
   else
