@@ -160,7 +160,7 @@ uint32_t VD6283::VD6283TX::GetExposureTime()
 int32_t VD6283::VD6283TX::SetGain(float Gain)
 {
   int32_t ret = BSP_ERROR_NONE;
-  uint16_t gain = (uint16_t)((float)a*256); //encoded to 8.8
+  uint16_t gain = (uint16_t)(Gain*256); //encoded to 8.8
   for(uint8_t channel=0 ; channel< VD6283::CHANNEL::LENGTH ;channel++) {
     if (VD6283TX_SetGain(&VD6283TXObj, channel, gain) < 0)
     {
@@ -182,7 +182,7 @@ int32_t VD6283::VD6283TX::SetGain(uint8_t Channel, float Gain)
 {
   int32_t ret;
 
-  uint16_t gain = (uint16_t)((float)a*256); //encoded to 8.8
+  uint16_t gain = (uint16_t)(Gain*256); //encoded to 8.8
   if (VD6283TX_SetGain(&VD6283TXObj, Channel, gain) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
