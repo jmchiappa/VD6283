@@ -157,11 +157,12 @@ uint32_t VD6283::VD6283TX::GetExposureTime()
   return pExposureTime;
 }
 
-int32_t VD6283::VD6283TX::SetGain(uint32_t Gain)
+int32_t VD6283::VD6283TX::SetGain(float Gain)
 {
   int32_t ret = BSP_ERROR_NONE;
+  uint16_t gain = (uint16_t)((float)a*256); //encoded to 8.8
   for(uint8_t channel=0 ; channel< VD6283::CHANNEL::LENGTH ;channel++) {
-    if (VD6283TX_SetGain(&VD6283TXObj, channel, Gain) < 0)
+    if (VD6283TX_SetGain(&VD6283TXObj, channel, gain) < 0)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
       break;
@@ -177,11 +178,12 @@ int32_t VD6283::VD6283TX::SetGain(uint32_t Gain)
   * @warning This function must not be called when a capture is ongoing.
   * @retval BSP status
   */
-int32_t VD6283::VD6283TX::SetGain(uint8_t Channel, uint32_t Gain)
+int32_t VD6283::VD6283TX::SetGain(uint8_t Channel, float Gain)
 {
   int32_t ret;
 
-  if (VD6283TX_SetGain(&VD6283TXObj, Channel, Gain) < 0)
+  uint16_t gain = (uint16_t)((float)a*256); //encoded to 8.8
+  if (VD6283TX_SetGain(&VD6283TXObj, Channel, gain) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
