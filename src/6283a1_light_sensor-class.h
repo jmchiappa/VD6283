@@ -59,8 +59,8 @@ namespace VD6283 {
       int32_t GetCapabilities(VD6283TX_Capabilities_t *pCapabilities);
       int32_t SetExposureTime(uint32_t ExposureTime);
       uint32_t GetExposureTime();
-      int32_t SetGain(uint8_t Channel, uint32_t Gain);
-      int32_t SetGain(uint32_t Gain);
+      int32_t SetGain(uint8_t Channel, float Gain);
+      int32_t SetGain(float Gain);
       uint32_t GetGain(uint8_t Channel);
       int32_t SetInterMeasurementTime(uint32_t InterMeasurementTime);
       uint32_t GetInterMeasurementTime();
