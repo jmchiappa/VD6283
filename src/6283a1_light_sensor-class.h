@@ -53,7 +53,7 @@ namespace VD6283 {
   class VD6283TX {
     public:
       VD6283TX() {};
-      int32_t begin(TwoWire &port);
+      int32_t begin(TwoWire &port, uint8_t i2cAddress);
       uint32_t ReadID();
       uint32_t isDataReady();
       int32_t GetCapabilities(VD6283TX_Capabilities_t *pCapabilities);

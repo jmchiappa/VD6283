@@ -21,12 +21,12 @@
 #include "6283a1_light_sensor-class.h"
 #include "stm32l4xx_nucleo_errno.h"
 
-int32_t VD6283::VD6283TX::begin(TwoWire &port)
+int32_t VD6283::VD6283TX::begin(TwoWire &port, uint8_t i2cAddress = VD6283::CONSTANT::I2C_DEFAULT_ADDRESS)
 {
   int32_t ret;
   uint32_t id;
   VD6283TXObj.IO = (void *) &i2cBus;
-  i2cBus.begin(VD6283::CONSTANT::I2C_DEFAULT_ADDRESS>>1,port);
+  i2cBus.begin( i2cAddress >> 1 , port );
   if (VD6283TX_ReadID(&VD6283TXObj, &id) != VD6283TX_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
