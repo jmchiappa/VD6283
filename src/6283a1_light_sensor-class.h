@@ -53,7 +53,7 @@ namespace VD6283 {
   class VD6283TX {
     public:
       VD6283TX() {};
-      int32_t begin(TwoWire &port, uint8_t i2cAddress);
+      int32_t begin(TwoWire &port, uint8_t i2c_address);
       uint32_t ReadID();
       uint32_t isDataReady();
       int32_t GetCapabilities(VD6283TX_Capabilities_t *pCapabilities);
@@ -76,6 +76,7 @@ namespace VD6283 {
       VD6283TX_Capabilities_t VD6283A1_LIGHT_SENSOR_Cap;
       VD6283TX_Object_t VD6283TXObj;
       BusIO i2cBus;
+      int8_t i2c_address = VD6283::CONSTANT::I2C_DEFAULT_ADDRESS;
   };
 }
 

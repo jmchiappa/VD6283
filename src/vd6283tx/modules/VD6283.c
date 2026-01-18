@@ -33,7 +33,7 @@
 #include "STALS_compat.h"
 
 #ifndef VD6283_CONFIG_DEVICES_MAX
-#define VD6283_CONFIG_DEVICES_MAX		1
+#define VD6283_CONFIG_DEVICES_MAX		4
 #endif
 
 #define UID_LEN					16
