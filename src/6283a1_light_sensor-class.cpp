@@ -20,6 +20,13 @@
 #include "vd6283tx/modules/busIO/IO.h"
 #include "6283a1_light_sensor-class.h"
 #include "stm32l4xx_nucleo_errno.h"
+#include "vd6283tx/modules/VD6283.h"
+
+extern struct VD6283_device devices[];
+
+void VD6283::VD6283TX::init() {
+  memset( devices, 0 , sizeof( VD6283_device ) );
+}
 
 int32_t VD6283::VD6283TX::begin(TwoWire &port, uint8_t i2caddress = VD6283::CONSTANT::I2C_DEFAULT_ADDRESS)
 {
