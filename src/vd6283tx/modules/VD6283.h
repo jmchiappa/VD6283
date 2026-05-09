@@ -2,13 +2,13 @@
 #define __VD6283__
 
 #ifndef __KERNEL__
-#include <stdlib.h>
-#include <string.h>
+#	include <stdlib.h>
+#	include <string.h>
 #else
-#include <linux/string.h>
-#include <linux/bitops.h>
-#include <linux/math64.h>
-#include <linux/bug.h>
+#	include <linux/string.h>
+#	include <linux/bitops.h>
+#	include <linux/math64.h>
+#	include <linux/bug.h>
 #endif
 
 #include "STALS.h"
@@ -17,16 +17,16 @@
 
 #include "STALS_compat.h"
 
-#ifndef VD6283_CONFIG_DEVICES_MAX
-#define VD6283_CONFIG_DEVICES_MAX		4
-#endif
+// #ifndef VD6283_CONFIG_DEVICES_MAX
+// #define VD6283_CONFIG_DEVICES_MAX		4
+// #endif
 
 #define UID_LEN					16
 
 #define VD6283_CHANNEL_NB			STALS_ALS_MAX_CHANNELS
 
 #ifndef ARRAY_SIZE
-#define ARRAY_SIZE(a)				(sizeof(a) / sizeof(a[0]))
+#	define ARRAY_SIZE(a)				(sizeof(a) / sizeof(a[0]))
 #endif
 
 #define VD6283_DC_CHANNELS_MASK			0x1f
@@ -40,11 +40,11 @@
 #define VD6283_DEFAULT_OTP_VERSION	0x15
 
 #ifndef MAX
-#define MAX(a, b)				((a) > (b) ? (a) : (b))
+#	define MAX(a, b)				((a) > (b) ? (a) : (b))
 #endif
 
 #ifndef MIN
-#define MIN(a, b)				((a) < (b) ? (a) : (b))
+#	define MIN(a, b)				((a) < (b) ? (a) : (b))
 #endif
 
 #define VD6283_DEFAULT_FILTER_INDEX		2
@@ -123,5 +123,7 @@ struct VD6283_device {
 	} otp;
 	char uid[UID_LEN];
 };
+
+typedef struct VD6283_device VD6283_device_t;
 
 #endif

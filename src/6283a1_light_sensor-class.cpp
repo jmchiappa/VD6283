@@ -22,13 +22,13 @@
 #include "stm32l4xx_nucleo_errno.h"
 #include "vd6283tx/modules/VD6283.h"
 
-extern struct VD6283_device devices[];
+// extern VD6283_device_t devices[];
 
-void VD6283::VD6283TX::init() {
-  memset( devices, 0 , sizeof( VD6283_device ) );
-}
+// void VD6283::VD6283TX::init() {
+//   memset( devices, 0 , VD6283_CONFIG_DEVICES_MAX * sizeof( VD6283_device ) );
+// }
 
-int32_t VD6283::VD6283TX::begin(TwoWire &port, uint8_t i2caddress = VD6283::CONSTANT::I2C_DEFAULT_ADDRESS)
+int32_t VD6283::VD6283TX::begin(TwoWire &port, uint8_t i2caddress )
 {
   int32_t ret;
   uint32_t id;

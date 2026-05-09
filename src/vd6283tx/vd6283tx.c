@@ -100,7 +100,7 @@ int32_t VD6283TX_ReadID(VD6283TX_Object_t *pObj, uint32_t *pId)
   {
     /* initialize the variable before reading the ID register */
     *pId = 0;
-    ret = STALS_RdByte(pObj,VD6283TX_DEVICE_ID_REG,pId);
+    ret = STALS_RdByte(pObj,VD6283TX_DEVICE_ID_REG, (uint8_t *)pId);
     // ret = pObj->(BusIO *)IO-> ->ReadReg(pObj->IO.Address, VD6283TX_DEVICE_ID_REG, (uint8_t *) pId, 1);
   }
   else
@@ -339,7 +339,7 @@ int32_t VD6283TX_GetInterMeasurementTime(VD6283TX_Object_t *pObj, uint32_t *pInt
 int32_t VD6283TX_Start(VD6283TX_Object_t *pObj, uint8_t Mode)
 {
   int32_t ret;
-
+  STALS_ErrCode_t errno;
   if (pObj == NULL)
   {
     ret = VD6283TX_INVALID_PARAM;
@@ -348,7 +348,7 @@ int32_t VD6283TX_Start(VD6283TX_Object_t *pObj, uint8_t Mode)
   {
     ret = VD6283TX_INVALID_PARAM;
   }
-  else if (STALS_Start(pObj->handle, (enum STALS_Mode_t)Mode, VD6283TX_ALL_CHANNELS) == STALS_NO_ERROR)
+  else if ( errno = STALS_Start(pObj->handle, (enum STALS_Mode_t)Mode, VD6283TX_ALL_CHANNELS) == STALS_NO_ERROR)
   {
     pObj->IsStarted = 1U;
     pObj->IsContinuous = (Mode == VD6283TX_MODE_CONTINUOUS) ? 1U : 0U;
@@ -358,7 +358,8 @@ int32_t VD6283TX_Start(VD6283TX_Object_t *pObj, uint8_t Mode)
   {
     ret = VD6283TX_ERROR;
   }
-
+  
+  // ret = ( ret & 0xFFFF ) | ( (uint32_t)errno) << 16 ;
   return ret;
 }
 

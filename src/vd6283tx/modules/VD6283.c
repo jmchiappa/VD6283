@@ -18,7 +18,7 @@
 
 	#include "VD6283.h"
 
-struct VD6283_device devices[VD6283_CONFIG_DEVICES_MAX];
+// VD6283_device_t devices[VD6283_CONFIG_DEVICES_MAX];
 
 static const enum STALS_Color_Id_t
 channel_2_color_rgb_ir_clear_ir_cut_visible[VD6283_CHANNEL_NB] = {
@@ -111,9 +111,9 @@ do { \
 
 
 /* Fw declarations */
-static STALS_ErrCode_t set_channel_gain(struct VD6283_device *dev, int c,
+static STALS_ErrCode_t set_channel_gain(VD6283_device_t *dev, int c,
 	uint16_t Gain);
-static STALS_ErrCode_t set_pedestal_value(struct VD6283_device *dev,
+static STALS_ErrCode_t set_pedestal_value(VD6283_device_t *dev,
 	uint32_t value);
 
 static inline int channelId_2_index(enum STALS_Channel_Id_t ChannelId)
@@ -122,7 +122,7 @@ static inline int channelId_2_index(enum STALS_Channel_Id_t ChannelId)
 		STALS_ALS_MAX_CHANNELS;
 }
 
-static int is_filter_mask_valid(struct VD6283_device *UNUSED_P(dev), uint8_t Channels)
+static int is_filter_mask_valid(VD6283_device_t *UNUSED_P(dev), uint8_t Channels)
 {
 	int c;
 
@@ -136,31 +136,31 @@ static int is_filter_mask_valid(struct VD6283_device *UNUSED_P(dev), uint8_t Cha
 	return 1;
 }
 
-static int is_cut_2_3(struct VD6283_device *dev)
+static int is_cut_2_3(VD6283_device_t *dev)
 {
 	return (dev->device_id == VD6283_DEVICE) &&
 		(dev->revision_id == VD6283_REVISION);
 }
 
-static int is_cut_valid(struct VD6283_device *dev)
+static int is_cut_valid(VD6283_device_t *dev)
 {
 	return is_cut_2_3(dev);
 }
 
-static struct VD6283_device *get_device(void **pHandle)
-{
-	uint32_t i;
+// static VD6283_device_t *get_device(void **pHandle)
+// {
+// 	uint32_t i;
 
-	for (i = 0; i < VD6283_CONFIG_DEVICES_MAX; i++) {
-		if (!devices[i].st)
-			break;
-	}
-	*pHandle = (void *)(uintptr_t)i;
+// 	for (i = 0; i < VD6283_CONFIG_DEVICES_MAX; i++) {
+// 		if (!devices[i].st)
+// 			break;
+// 	}
+// 	*pHandle = (void *)(uintptr_t)i;
 
-	return i == VD6283_CONFIG_DEVICES_MAX ? NULL : &devices[i];
-}
+// 	return i == VD6283_CONFIG_DEVICES_MAX ? NULL : &devices[i];
+// }
 
-static void setup_device(struct VD6283_device *dev, void *pClient, void *hdl)
+static void setup_device(VD6283_device_t *dev, void *pClient, void *hdl)
 {
 	memset(dev, 0, sizeof(*dev));
 	dev->client = pClient;
@@ -171,7 +171,7 @@ static void setup_device(struct VD6283_device *dev, void *pClient, void *hdl)
 	dev->exposure = 80000;
 }
 
-static STALS_ErrCode_t otp_read_bank(struct VD6283_device *dev, int bank,
+static STALS_ErrCode_t otp_read_bank(VD6283_device_t *dev, int bank,
 	int bit_start, int bit_end, uint32_t *opt)
 {
 	int bit_nb = bit_end - bit_start + 1;
@@ -182,7 +182,7 @@ static STALS_ErrCode_t otp_read_bank(struct VD6283_device *dev, int bank,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t otp_read(struct VD6283_device *dev, int bit_start,
+static STALS_ErrCode_t otp_read(VD6283_device_t *dev, int bit_start,
 	int bit_nb, uint32_t *otp, int bit_swap)
 {
 	STALS_ErrCode_t res;
@@ -225,7 +225,7 @@ static STALS_ErrCode_t otp_read(struct VD6283_device *dev, int bit_start,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t check_supported_device(struct VD6283_device *dev)
+static STALS_ErrCode_t check_supported_device(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 
@@ -242,7 +242,7 @@ static STALS_ErrCode_t check_supported_device(struct VD6283_device *dev)
 	return STALS_ERROR_INVALID_DEVICE_ID;
 }
 
-static STALS_ErrCode_t is_data_ready(struct VD6283_device *dev,
+static STALS_ErrCode_t is_data_ready(VD6283_device_t *dev,
 	uint8_t *is_data_ready)
 {
 	STALS_ErrCode_t res;
@@ -254,7 +254,7 @@ static STALS_ErrCode_t is_data_ready(struct VD6283_device *dev,
 	return res;
 }
 
-static STALS_ErrCode_t ac_mode_update(struct VD6283_device *dev, uint8_t mask,
+static STALS_ErrCode_t ac_mode_update(VD6283_device_t *dev, uint8_t mask,
 	uint8_t data)
 {
 	STALS_ErrCode_t res;
@@ -267,7 +267,7 @@ static STALS_ErrCode_t ac_mode_update(struct VD6283_device *dev, uint8_t mask,
 	return STALS_WrByte(dev->client, VD6283_AC_MODE, ac_mode);
 }
 
-static STALS_ErrCode_t acknowledge_irq(struct VD6283_device *dev)
+static STALS_ErrCode_t acknowledge_irq(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 
@@ -281,7 +281,7 @@ static STALS_ErrCode_t acknowledge_irq(struct VD6283_device *dev)
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t dev_sw_reset(struct VD6283_device *dev)
+static STALS_ErrCode_t dev_sw_reset(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 
@@ -295,7 +295,7 @@ static STALS_ErrCode_t dev_sw_reset(struct VD6283_device *dev)
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t otp_reset(struct VD6283_device *dev)
+static STALS_ErrCode_t otp_reset(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 	uint8_t status;
@@ -326,7 +326,7 @@ static uint8_t byte_bit_reversal(uint8_t d)
 	return d;
 }
 
-static STALS_ErrCode_t opt_read_init(struct VD6283_device *dev)
+static STALS_ErrCode_t opt_read_init(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 	uint8_t reg[8];
@@ -363,7 +363,7 @@ static STALS_ErrCode_t opt_read_init(struct VD6283_device *dev)
 	return STALS_NO_ERROR;
 }
 
-static int fixup_otp_filter_config(struct VD6283_device *dev)
+static int fixup_otp_filter_config(VD6283_device_t *dev)
 {
 	uint32_t check[3];
 	int res;
@@ -389,7 +389,7 @@ static int fixup_otp_filter_config(struct VD6283_device *dev)
 	return 1;
 }
 
-static STALS_ErrCode_t otp_read_param_details(struct VD6283_device *dev)
+static STALS_ErrCode_t otp_read_param_details(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 	uint32_t otp_data;
@@ -424,7 +424,7 @@ error:
 	return res;
 }
 
-static STALS_ErrCode_t otp_read_param(struct VD6283_device *dev)
+static STALS_ErrCode_t otp_read_param(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 	uint32_t otp_data;
@@ -468,7 +468,7 @@ static char encode_nible(uint8_t nible, uint8_t *xor_reg)
 	return nible_to_ascii(nible ^ prev_xor_reg);
 }
 
-static STALS_ErrCode_t otp_generate_uid(struct VD6283_device *dev)
+static STALS_ErrCode_t otp_generate_uid(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 	uint32_t otp_data;
@@ -502,7 +502,7 @@ error:
 	return res;
 }
 
-static STALS_ErrCode_t trim_oscillators(struct VD6283_device *dev)
+static STALS_ErrCode_t trim_oscillators(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 	uint16_t hf_trim = dev->is_otp_usage_enable ? dev->otp.hf_trim :
@@ -532,7 +532,7 @@ static STALS_ErrCode_t trim_oscillators(struct VD6283_device *dev)
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t clamp_enable(struct VD6283_device *dev)
+static STALS_ErrCode_t clamp_enable(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 
@@ -550,7 +550,7 @@ static STALS_ErrCode_t clamp_enable(struct VD6283_device *dev)
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t select_pd(struct VD6283_device *dev)
+static STALS_ErrCode_t select_pd(VD6283_device_t *dev)
 {
 	uint8_t pds[] = {0x07, 0x07, 0x07, 0x1f, 0x0f, 0x1f};
 	STALS_ErrCode_t res;
@@ -566,7 +566,7 @@ static STALS_ErrCode_t select_pd(struct VD6283_device *dev)
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t set_dithering(struct VD6283_device *dev)
+static STALS_ErrCode_t set_dithering(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 
@@ -586,7 +586,7 @@ static STALS_ErrCode_t set_dithering(struct VD6283_device *dev)
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t dev_configuration(struct VD6283_device *dev)
+static STALS_ErrCode_t dev_configuration(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 	int c;
@@ -641,7 +641,7 @@ static STALS_ErrCode_t dev_configuration(struct VD6283_device *dev)
 	return STALS_NO_ERROR;
 }
 
-static void put_device(struct VD6283_device *dev)
+static void put_device(VD6283_device_t *dev)
 {
 	dev_sw_reset(dev);
 	/* reset otp to avoid high consumption */
@@ -651,19 +651,20 @@ static void put_device(struct VD6283_device *dev)
 	dev->st = DEV_FREE;
 }
 
-static struct VD6283_device *get_active_device(void *pHandle)
+static VD6283_device_t *get_active_device(void *pHandle)
 {
-	uint32_t handle = (uint32_t)(uintptr_t) pHandle;
+	// uint32_t handle = (uint32_t)(uintptr_t) pHandle;
 
-	if (handle >= VD6283_CONFIG_DEVICES_MAX)
-		return NULL;
-	if (devices[handle].st == DEV_FREE)
-		return NULL;
+	// if (handle >= VD6283_CONFIG_DEVICES_MAX)
+	// 	return NULL;
+	// if (devices[handle].st == DEV_FREE)
+	// 	return NULL;
 
-	return &devices[handle];
+	// return &devices[handle];
+	return (VD6283_device_t *)pHandle;
 }
 
-static STALS_ErrCode_t get_channel_gain(struct VD6283_device *dev, int c,
+static STALS_ErrCode_t get_channel_gain(VD6283_device_t *dev, int c,
 	uint16_t *pAppliedGain)
 {
 	*pAppliedGain = dev->gains[c];
@@ -671,7 +672,7 @@ static STALS_ErrCode_t get_channel_gain(struct VD6283_device *dev, int c,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t set_channel_gain(struct VD6283_device *dev, int c,
+static STALS_ErrCode_t set_channel_gain(VD6283_device_t *dev, int c,
 	uint16_t Gain)
 {
 	STALS_ErrCode_t res;
@@ -690,7 +691,7 @@ static STALS_ErrCode_t set_channel_gain(struct VD6283_device *dev, int c,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t get_exposure(struct VD6283_device *dev,
+static STALS_ErrCode_t get_exposure(VD6283_device_t *dev,
 	uint32_t *pAppliedExpoTimeUs)
 {
 	*pAppliedExpoTimeUs = dev->exposure;
@@ -698,7 +699,7 @@ static STALS_ErrCode_t get_exposure(struct VD6283_device *dev,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t set_exposure(struct VD6283_device *dev,
+static STALS_ErrCode_t set_exposure(VD6283_device_t *dev,
 	uint32_t ExpoTimeInUs, int is_cache_updated)
 {
 	const uint32_t step_size_us = 1600;
@@ -726,7 +727,7 @@ static STALS_ErrCode_t set_exposure(struct VD6283_device *dev,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t dev_enable_channels_for_mode(struct VD6283_device *dev,
+static STALS_ErrCode_t dev_enable_channels_for_mode(VD6283_device_t *dev,
 	enum STALS_Mode_t mode, uint8_t channels)
 {
 	uint8_t active_chan = dev->als.chan | dev->flk.chan;
@@ -764,7 +765,7 @@ static STALS_ErrCode_t dev_enable_channels_for_mode(struct VD6283_device *dev,
 	return STALS_NO_ERROR;
 }
 
-static uint8_t dev_disable_dc_chan_en_for_mode(struct VD6283_device *dev,
+static uint8_t dev_disable_dc_chan_en_for_mode(VD6283_device_t *dev,
 	enum STALS_Mode_t mode)
 {
 	int is_flk = mode == STALS_MODE_FLICKER;
@@ -776,7 +777,7 @@ static uint8_t dev_disable_dc_chan_en_for_mode(struct VD6283_device *dev,
 	return res;
 }
 
-static STALS_ErrCode_t dev_disable_channels_for_mode(struct VD6283_device *dev,
+static STALS_ErrCode_t dev_disable_channels_for_mode(VD6283_device_t *dev,
 	enum STALS_Mode_t mode)
 {
 	int is_flk = mode == STALS_MODE_FLICKER;
@@ -809,7 +810,7 @@ static STALS_ErrCode_t dev_disable_channels_for_mode(struct VD6283_device *dev,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t enable_flicker_output_mode(struct VD6283_device *dev)
+static STALS_ErrCode_t enable_flicker_output_mode(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 	uint8_t pdm_select_output = PDM_SELECT_GPIO1;
@@ -860,7 +861,7 @@ static STALS_ErrCode_t enable_flicker_output_mode(struct VD6283_device *dev)
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t disable_flicker_output_mode(struct VD6283_device *dev)
+static STALS_ErrCode_t disable_flicker_output_mode(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 
@@ -889,7 +890,7 @@ static STALS_ErrCode_t disable_flicker_output_mode(struct VD6283_device *dev)
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t stop_als(struct VD6283_device *dev,
+static STALS_ErrCode_t stop_als(VD6283_device_t *dev,
 	enum STALS_Mode_t mode)
 {
 	STALS_ErrCode_t res;
@@ -913,7 +914,7 @@ static STALS_ErrCode_t stop_als(struct VD6283_device *dev,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t start_als(struct VD6283_device *dev, uint8_t channels,
+static STALS_ErrCode_t start_als(VD6283_device_t *dev, uint8_t channels,
 	enum STALS_Mode_t mode)
 {
 	STALS_ErrCode_t res=STALS_NO_ERROR;
@@ -955,19 +956,19 @@ start_als_error:
 	return res;
 }
 
-static STALS_ErrCode_t start_single_shot(struct VD6283_device *dev,
+static STALS_ErrCode_t start_single_shot(VD6283_device_t *dev,
 	uint8_t channels)
 {
 	return start_als(dev, channels, STALS_MODE_ALS_SINGLE_SHOT);
 }
 
-static STALS_ErrCode_t start_synchronous(struct VD6283_device *dev,
+static STALS_ErrCode_t start_synchronous(VD6283_device_t *dev,
 	uint8_t channels)
 {
 	return start_als(dev, channels, STALS_MODE_ALS_SYNCHRONOUS);
 }
 
-static STALS_ErrCode_t start_flicker(struct VD6283_device *dev,
+static STALS_ErrCode_t start_flicker(VD6283_device_t *dev,
 	uint8_t channels)
 {
 	STALS_ErrCode_t res;
@@ -1005,17 +1006,17 @@ static STALS_ErrCode_t start_flicker(struct VD6283_device *dev,
 	return res;
 }
 
-static STALS_ErrCode_t stop_single_shot(struct VD6283_device *dev)
+static STALS_ErrCode_t stop_single_shot(VD6283_device_t *dev)
 {
 	return stop_als(dev, STALS_MODE_ALS_SINGLE_SHOT);
 }
 
-static STALS_ErrCode_t stop_synchronous(struct VD6283_device *dev)
+static STALS_ErrCode_t stop_synchronous(VD6283_device_t *dev)
 {
 	return stop_als(dev, STALS_MODE_ALS_SYNCHRONOUS);
 }
 
-static STALS_ErrCode_t stop_flicker(struct VD6283_device *dev)
+static STALS_ErrCode_t stop_flicker(VD6283_device_t *dev)
 {
 	STALS_ErrCode_t res;
 
@@ -1032,7 +1033,7 @@ static STALS_ErrCode_t stop_flicker(struct VD6283_device *dev)
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t get_pedestal_enable(struct VD6283_device *dev,
+static STALS_ErrCode_t get_pedestal_enable(VD6283_device_t *dev,
 	uint32_t *value)
 {
 	STALS_ErrCode_t res;
@@ -1045,7 +1046,7 @@ static STALS_ErrCode_t get_pedestal_enable(struct VD6283_device *dev,
 	return res;
 }
 
-static STALS_ErrCode_t get_pedestal_value(struct VD6283_device *dev,
+static STALS_ErrCode_t get_pedestal_value(VD6283_device_t *dev,
 	uint32_t *value)
 {
 	STALS_ErrCode_t res;
@@ -1057,7 +1058,7 @@ static STALS_ErrCode_t get_pedestal_value(struct VD6283_device *dev,
 	return res;
 }
 
-static STALS_ErrCode_t get_otp_usage_enable(struct VD6283_device *dev,
+static STALS_ErrCode_t get_otp_usage_enable(VD6283_device_t *dev,
 	uint32_t *value)
 {
 	*value = dev->is_otp_usage_enable;
@@ -1065,7 +1066,7 @@ static STALS_ErrCode_t get_otp_usage_enable(struct VD6283_device *dev,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t get_output_dark_enable(struct VD6283_device *dev,
+static STALS_ErrCode_t get_output_dark_enable(VD6283_device_t *dev,
 	uint32_t *value)
 {
 	*value = dev->is_output_dark_enable;
@@ -1073,7 +1074,7 @@ static STALS_ErrCode_t get_output_dark_enable(struct VD6283_device *dev,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t get_sda_drive_value(struct VD6283_device *dev,
+static STALS_ErrCode_t get_sda_drive_value(VD6283_device_t *dev,
 	uint32_t *value)
 {
 	STALS_ErrCode_t res;
@@ -1086,7 +1087,7 @@ static STALS_ErrCode_t get_sda_drive_value(struct VD6283_device *dev,
 	return res;
 }
 
-static STALS_ErrCode_t get_saturation_value(struct VD6283_device *dev,
+static STALS_ErrCode_t get_saturation_value(VD6283_device_t *dev,
 	uint32_t *value)
 {
 	STALS_ErrCode_t res;
@@ -1107,21 +1108,21 @@ static STALS_ErrCode_t get_saturation_value(struct VD6283_device *dev,
 }
 
 
-static STALS_ErrCode_t set_pedestal_enable(struct VD6283_device *dev,
+static STALS_ErrCode_t set_pedestal_enable(VD6283_device_t *dev,
 	uint32_t value)
 {
 	return ac_mode_update(dev, AC_PEDESTAL,
 		value ? AC_PEDESTAL_ENABLE : AC_PEDESTAL_DISABLE);
 }
 
-static STALS_ErrCode_t set_pedestal_value(struct VD6283_device *dev,
+static STALS_ErrCode_t set_pedestal_value(VD6283_device_t *dev,
 	uint32_t value)
 {
 	return STALS_WrByte(dev->client, VD6283_AC_PEDESTAL,
 		value & VD6283_PEDESTAL_VALUE_MASK);
 }
 
-static STALS_ErrCode_t set_otp_usage_enable(struct VD6283_device *dev,
+static STALS_ErrCode_t set_otp_usage_enable(VD6283_device_t *dev,
 	uint32_t value)
 {
 	STALS_ErrCode_t res;
@@ -1135,7 +1136,7 @@ static STALS_ErrCode_t set_otp_usage_enable(struct VD6283_device *dev,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t set_output_dark_enable(struct VD6283_device *dev,
+static STALS_ErrCode_t set_output_dark_enable(VD6283_device_t *dev,
 	uint32_t value)
 {
 	STALS_ErrCode_t res;
@@ -1150,7 +1151,7 @@ static STALS_ErrCode_t set_output_dark_enable(struct VD6283_device *dev,
 	return STALS_NO_ERROR;
 }
 
-static STALS_ErrCode_t set_sda_drive_value(struct VD6283_device *dev,
+static STALS_ErrCode_t set_sda_drive_value(VD6283_device_t *dev,
 	uint32_t value)
 {
 	STALS_ErrCode_t res;
@@ -1188,7 +1189,7 @@ static STALS_ErrCode_t set_sda_drive_value(struct VD6283_device *dev,
  		return calfactor(gain&0x0F);
  }
 
- static void apply_calfactor(struct VD6283_device *dev,
+ static void apply_calfactor(VD6283_device_t *dev,
  	struct STALS_Als_t *pAlsValue)
  {
 	uint8_t otp_coef_cal;
@@ -1221,16 +1222,16 @@ STALS_ErrCode_t STALS_Init(char *UNUSED_P(pDeviceName), void *pClient,
 	void **pHandle)
 {
 	STALS_ErrCode_t res;
-	struct VD6283_device *dev;
+	VD6283_device_t *dev;
 
-	CHECK_NULL_PTR(pHandle);
+	// CHECK_NULL_PTR(pHandle);
 	// get an empty device structure associated to handle
-	dev = get_device(pHandle);
-	if (!dev) {
-		// NULL POINTEUR
-		res = STALS_ERROR_INIT;
-		goto get_device_error;
-	}
+	dev = (VD6283_device_t *)*pHandle;
+	// if (!dev) {
+	// 	// NULL POINTEUR
+	// 	res = STALS_ERROR_INIT;
+	// 	goto get_device_error;
+	// }
 	// configure dev structure with default values
 	setup_device(dev, pClient, *pHandle);
 	//i2c read access no otp read
@@ -1264,7 +1265,7 @@ get_device_error:
 
 STALS_ErrCode_t STALS_Term(void *pHandle)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 
 	CHECK_DEVICE_VALID(dev);
 
@@ -1290,7 +1291,7 @@ STALS_ErrCode_t STALS_GetVersion(uint32_t *pVersion, uint32_t *pRevision)
 STALS_ErrCode_t STALS_GetChannelColor(void *pHandle,
 	enum STALS_Channel_Id_t ChannelId, enum STALS_Color_Id_t *pColor)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 
 	CHECK_DEVICE_VALID(dev);
 	CHECK_NULL_PTR(pColor);
@@ -1304,7 +1305,7 @@ STALS_ErrCode_t STALS_GetChannelColor(void *pHandle,
 STALS_ErrCode_t STALS_SetExposureTime(void *pHandle, uint32_t ExpoTimeInUs,
 	uint32_t *pAppliedExpoTimeUs)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	STALS_ErrCode_t res;
 
 	CHECK_DEVICE_VALID(dev);
@@ -1323,7 +1324,7 @@ STALS_ErrCode_t STALS_SetExposureTime(void *pHandle, uint32_t ExpoTimeInUs,
 STALS_ErrCode_t STALS_GetExposureTime(void *pHandle,
 	uint32_t *pAppliedExpoTimeUs)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 
 	CHECK_DEVICE_VALID(dev);
 	CHECK_NULL_PTR(pAppliedExpoTimeUs);
@@ -1336,7 +1337,7 @@ STALS_ErrCode_t STALS_SetInterMeasurementTime(void *pHandle,
 {
 	const uint32_t step_size_us = 20500;
 	const uint32_t rounding = step_size_us / 2;
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	STALS_ErrCode_t res;
 	uint64_t value_acc;
 	uint8_t value;
@@ -1361,7 +1362,7 @@ STALS_ErrCode_t STALS_GetInterMeasurementTime(void *pHandle,
 	uint32_t *pAppliedInterMeasurmentInUs)
 {
 	const uint32_t step_size_us = 20500;
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	STALS_ErrCode_t res;
 	uint8_t value;
 
@@ -1380,7 +1381,7 @@ STALS_ErrCode_t STALS_GetInterMeasurementTime(void *pHandle,
 STALS_ErrCode_t STALS_GetProductVersion(void *pHandle, uint8_t *pDeviceID,
 	uint8_t *pRevisionID)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 
 	CHECK_DEVICE_VALID(dev);
 	CHECK_NULL_PTR(pDeviceID);
@@ -1395,7 +1396,7 @@ STALS_ErrCode_t STALS_GetProductVersion(void *pHandle, uint8_t *pDeviceID,
 STALS_ErrCode_t STALS_SetGain(void *pHandle, enum STALS_Channel_Id_t ChannelId,
 	uint16_t Gain, uint16_t *pAppliedGain)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	int chan = channelId_2_index(ChannelId);
 	STALS_ErrCode_t res;
 
@@ -1416,7 +1417,7 @@ STALS_ErrCode_t STALS_SetGain(void *pHandle, enum STALS_Channel_Id_t ChannelId,
 STALS_ErrCode_t STALS_GetGain(void *pHandle, enum STALS_Channel_Id_t ChannelId,
 	uint16_t *pAppliedGain)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	int chan = channelId_2_index(ChannelId);
 	STALS_ErrCode_t res;
 
@@ -1435,7 +1436,7 @@ STALS_ErrCode_t STALS_GetGain(void *pHandle, enum STALS_Channel_Id_t ChannelId,
 STALS_ErrCode_t STALS_SetFlickerOutputType(void *pHandle,
 	enum STALS_FlickerOutputType_t FlickerOutputType)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	STALS_ErrCode_t res = STALS_NO_ERROR;
 
 	CHECK_DEVICE_VALID(dev);
@@ -1458,7 +1459,7 @@ STALS_ErrCode_t STALS_SetFlickerOutputType(void *pHandle,
 STALS_ErrCode_t STALS_Start(void *pHandle, enum STALS_Mode_t Mode,
 	uint8_t Channels)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	STALS_ErrCode_t res;
 
 	CHECK_DEVICE_VALID(dev);
@@ -1484,7 +1485,7 @@ STALS_ErrCode_t STALS_Start(void *pHandle, enum STALS_Mode_t Mode,
 
 STALS_ErrCode_t STALS_Stop(void *pHandle, enum STALS_Mode_t Mode)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	STALS_ErrCode_t res;
 
 	CHECK_DEVICE_VALID(dev);
@@ -1509,7 +1510,7 @@ STALS_ErrCode_t STALS_Stop(void *pHandle, enum STALS_Mode_t Mode)
 STALS_ErrCode_t STALS_GetAlsValues(void *pHandle, uint8_t Channels,
 	struct STALS_Als_t *pAlsValue, uint8_t *pMeasureValid)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	STALS_ErrCode_t res = STALS_NO_ERROR;
 	uint8_t c;
 	uint32_t rawdata[VD6283_CHANNEL_NB];
@@ -1562,7 +1563,7 @@ STALS_ErrCode_t STALS_GetAlsValues(void *pHandle, uint8_t Channels,
 STALS_ErrCode_t STALS_GetFlickerFrequency(void *pHandle,
 	struct STALS_FlickerInfo_t *pFlickerInfo)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	CHECK_DEVICE_VALID(dev);
 	CHECK_NULL_PTR(pFlickerInfo);
 	return STALS_ERROR_FNCT_DEPRECATED;
@@ -1571,7 +1572,7 @@ STALS_ErrCode_t STALS_GetFlickerFrequency(void *pHandle,
 STALS_ErrCode_t STALS_SetControl(void *pHandle,
 	enum STALS_Control_Id_t ControlId, uint32_t ControlValue)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	STALS_ErrCode_t res;
 
 	CHECK_DEVICE_VALID(dev);
@@ -1613,7 +1614,7 @@ STALS_ErrCode_t STALS_SetControl(void *pHandle,
 STALS_ErrCode_t STALS_GetControl(void *pHandle,
 	enum STALS_Control_Id_t ControlId, uint32_t *pControlValue)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	STALS_ErrCode_t res;
 
 	CHECK_DEVICE_VALID(dev);
@@ -1653,7 +1654,7 @@ STALS_ErrCode_t STALS_GetControl(void *pHandle,
 
 STALS_ErrCode_t STALS_GetUid(void *pHandle, char **pUid)
 {
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 
 	CHECK_DEVICE_VALID(dev);
 	CHECK_NULL_PTR(pUid);
@@ -1665,7 +1666,7 @@ STALS_ErrCode_t STALS_GetUid(void *pHandle, char **pUid)
 
 STALS_ErrCode_t STALS_isDataReady(void *pHandle, uint8_t *pIsReady) {
 	STALS_ErrCode_t res = STALS_NO_ERROR;
-	struct VD6283_device *dev = get_active_device(pHandle);
+	VD6283_device_t *dev = get_active_device(pHandle);
 	res = is_data_ready(dev, pIsReady);
 	return res;
 }

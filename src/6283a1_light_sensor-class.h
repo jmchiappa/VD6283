@@ -23,6 +23,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "vd6283tx/vd6283tx.h"
+#include "vd6283tx/modules/VD6283.h"
 #include "Arduino.h"
 #include "Wire.h"
 #include "vd6283tx/modules/busIO/IO.h"
@@ -52,9 +53,12 @@ namespace VD6283 {
   
   class VD6283TX {
     public:
-      VD6283TX() {};
+      VD6283TX() {
+        // link local device struct to handle
+        VD6283TXObj.handle = &device;
+      };
       static void init();
-      int32_t begin(TwoWire &port, uint8_t i2c_address);
+      int32_t begin(TwoWire &port, uint8_t i2c_address = VD6283::CONSTANT::I2C_DEFAULT_ADDRESS);
       uint32_t ReadID();
       uint32_t isDataReady();
       int32_t GetCapabilities(VD6283TX_Capabilities_t *pCapabilities);
@@ -75,6 +79,7 @@ namespace VD6283 {
       int32_t DeInit();
     private:
       VD6283TX_Capabilities_t VD6283A1_LIGHT_SENSOR_Cap;
+      VD6283_device_t device;
       VD6283TX_Object_t VD6283TXObj;
       BusIO i2cBus;
       int8_t i2c_address = VD6283::CONSTANT::I2C_DEFAULT_ADDRESS;
